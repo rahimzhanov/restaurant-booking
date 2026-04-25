@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}Мой профиль | Ресторан "Вкус"{% endblock %}
+
+{% block content %}
+<h2>👤 Мой профиль</h2>
+
+<div class="row mt-4">
+    <!-- Информация о пользователе -->
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Личные данные</h5>
+                <p><strong>Email:</strong> {{ user.email }}</p>
+                <p><strong>Имя:</strong> {{ user.first_name|default:"Не указано" }}</p>
+                <p><strong>Телефон:</strong> {{ user.phone|default:"Не указан" }}</p>
+                <p><strong>Роль:</strong> {{ user.get_role_display }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Бронирования пользователя -->
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Мои бронирования</h5>
+
+                {% if bookings %}
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Столик</th>
+                                    <th>Дата</th>
+                                    <th>Время</th>
+                                    <th>Гости</th>
+                                    <th>Статус</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for booking in bookings %}
+                                <tr>
+                                    <td>№{{ booking.table.number }}</td>
+                                    <td>{{ booking.date }}</td>
+                                    <td>{{ booking.time }}</td>
+                                    <td>{{ booking.guests }}</td>
+                                    <td>{{ booking.get_status_display }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-muted">У вас пока нет бронирований.</p>
+                    <a href="{% url 'tables:home' %}" class="btn btn-primary">Забронировать столик</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
