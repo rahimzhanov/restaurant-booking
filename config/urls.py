@@ -1,14 +1,14 @@
-from django.contrib import admin
-from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib import admin
+from django.urls import include, path
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('accounts/', include('users.urls')),
-    path('tables/', include('tables.urls')),
-    path('bookings/', include('bookings.urls')),
-    path('', include('tables.urls')),  # Главная — список столиков
+    path("admin/", admin.site.urls),
+    path("accounts/", include("users.urls")),
+    path("tables/", include("tables.urls")),
+    path("bookings/", include("bookings.urls")),
+    path("", include("tables.urls")),  # Главная — список столиков
 ]
 
 if settings.DEBUG:

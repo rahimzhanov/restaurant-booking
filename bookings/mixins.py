@@ -1,6 +1,6 @@
+from django.contrib import messages
 from django.contrib.auth.mixins import AccessMixin
 from django.shortcuts import redirect
-from django.contrib import messages
 
 
 class AdminRequiredMixin(AccessMixin):
@@ -25,8 +25,8 @@ class AdminRequiredMixin(AccessMixin):
 
         if not request.user.is_admin_staff:
             # Вошёл, но не админ — показываем ошибку и перенаправляем
-            messages.error(request, 'Доступ запрещён. Требуются права администратора.')
-            return redirect('tables:home')
+            messages.error(request, "Доступ запрещён. Требуются права администратора.")
+            return redirect("tables:home")
 
         # Всё хорошо — выполняем запрос как обычно
         return super().dispatch(request, *args, **kwargs)

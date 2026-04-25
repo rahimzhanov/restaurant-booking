@@ -1,11 +1,12 @@
-from django.shortcuts import render, redirect
-from django.urls import reverse_lazy
-from django.views.generic import CreateView, TemplateView, View
-from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib import messages
-from .forms import CustomUserCreationForm, CustomAuthenticationForm
+from django.contrib.auth.views import LoginView
+from django.shortcuts import redirect
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, TemplateView
+
+from .forms import CustomAuthenticationForm, CustomUserCreationForm
 
 
 class RegisterView(CreateView):
@@ -16,9 +17,10 @@ class RegisterView(CreateView):
     1. GET-запрос: показывает пустую форму
     2. POST-запрос: проверяет данные и создаёт пользователя
     """
+
     form_class = CustomUserCreationForm  # Какую форму использовать
-    template_name = 'users/register.html'  # Какой шаблон показывать
-    success_url = reverse_lazy('bookings:profile')  # Куда перенаправить после успеха
+    template_name = "users/register.html"  # Какой шаблон показывать
+    success_url = reverse_lazy("bookings:profile")  # Куда перенаправить после успеха
 
     def form_valid(self, form):
         """
@@ -36,7 +38,7 @@ class RegisterView(CreateView):
         # Показываем зелёное сообщение об успехе
         messages.success(
             self.request,
-            f'Добро пожаловать, {self.object.first_name}! Ваш аккаунт успешно создан.'
+            f"Добро пожаловать, {self.object.first_name}! Ваш аккаунт успешно создан.",
         )
 
         return response
@@ -47,7 +49,7 @@ class RegisterView(CreateView):
         Если пользователь уже авторизован, перенаправляем в профиль.
         """
         if request.user.is_authenticated:
-            return redirect('bookings:profile')
+            return redirect("bookings:profile")
         return super().dispatch(request, *args, **kwargs)
 
 
@@ -59,13 +61,14 @@ class CustomLoginView(LoginView):
     1. GET: показывает форму входа
     2. POST: проверяет email/пароль и создаёт сессию
     """
+
     form_class = CustomAuthenticationForm
-    template_name = 'users/login.html'
+    template_name = "users/login.html"
     redirect_authenticated_user = True  # Если уже вошёл — сразу в профиль
 
     def form_valid(self, form):
         """Показываем сообщение при успешном входе"""
-        messages.success(self.request, f'С возвращением, {form.get_user().first_name}!')
+        messages.success(self.request, f"С возвращением, {form.get_user().first_name}!")
         return super().form_valid(form)
 
 
@@ -77,7 +80,8 @@ class ProfileView(LoginRequiredMixin, TemplateView):
     Если пользователь не вошёл — перенаправляет на страницу входа.
     TemplateView — просто показывает шаблон без дополнительной логики.
     """
-    template_name = 'users/profile.html'
+
+    template_name = "users/profile.html"
 
     def get_context_data(self, **kwargs):
         """
@@ -86,5 +90,5 @@ class ProfileView(LoginRequiredMixin, TemplateView):
         """
         context = super().get_context_data(**kwargs)
         # Пока передаём пустой список, на Этапе 3 добавим бронирования
-        context['bookings'] = []
+        context["bookings"] = []
         return context

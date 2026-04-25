@@ -1,5 +1,6 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+
 from .models import User
 
 
@@ -14,45 +15,40 @@ class CustomUserCreationForm(UserCreationForm):
     """
 
     first_name = forms.CharField(
-        label='Имя',
+        label="Имя",
         max_length=30,
         required=True,
-        widget=forms.TextInput(attrs={
-            'class': 'form-control',
-            'placeholder': 'Введите ваше имя'
-        })
+        widget=forms.TextInput(
+            attrs={"class": "form-control", "placeholder": "Введите ваше имя"}
+        ),
     )
 
     phone = forms.CharField(
-        label='Телефон',
+        label="Телефон",
         max_length=20,
         required=False,
-        widget=forms.TextInput(attrs={
-            'class': 'form-control',
-            'placeholder': '+7 (999) 123-45-67'
-        })
+        widget=forms.TextInput(
+            attrs={"class": "form-control", "placeholder": "+7 (999) 123-45-67"}
+        ),
     )
 
     class Meta:
         model = User
-        fields = ['email', 'first_name', 'phone', 'password1', 'password2']
+        fields = ["email", "first_name", "phone", "password1", "password2"]
 
     def __init__(self, *args, **kwargs):
         """Добавляем CSS-классы и плейсхолдеры ко всем полям"""
         super().__init__(*args, **kwargs)
 
-        self.fields['email'].widget.attrs.update({
-            'class': 'form-control',
-            'placeholder': 'example@email.com'
-        })
-        self.fields['password1'].widget.attrs.update({
-            'class': 'form-control',
-            'placeholder': 'Придумайте пароль'
-        })
-        self.fields['password2'].widget.attrs.update({
-            'class': 'form-control',
-            'placeholder': 'Повторите пароль'
-        })
+        self.fields["email"].widget.attrs.update(
+            {"class": "form-control", "placeholder": "example@email.com"}
+        )
+        self.fields["password1"].widget.attrs.update(
+            {"class": "form-control", "placeholder": "Придумайте пароль"}
+        )
+        self.fields["password2"].widget.attrs.update(
+            {"class": "form-control", "placeholder": "Повторите пароль"}
+        )
 
     def save(self, commit=True):
         """
@@ -66,7 +62,7 @@ class CustomUserCreationForm(UserCreationForm):
         user = super().save(commit=False)
 
         # Генерируем username из email (часть до @)
-        base_username = self.cleaned_data['email'].split('@')[0]
+        base_username = self.cleaned_data["email"].split("@")[0]
         username = base_username
 
         # Если такой username уже есть, добавляем номер
@@ -90,11 +86,9 @@ class CustomAuthenticationForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields['username'].widget.attrs.update({
-            'class': 'form-control',
-            'placeholder': 'Введите email'
-        })
-        self.fields['password'].widget.attrs.update({
-            'class': 'form-control',
-            'placeholder': 'Введите пароль'
-        })
+        self.fields["username"].widget.attrs.update(
+            {"class": "form-control", "placeholder": "Введите email"}
+        )
+        self.fields["password"].widget.attrs.update(
+            {"class": "form-control", "placeholder": "Введите пароль"}
+        )
