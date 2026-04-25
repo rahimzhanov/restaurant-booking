@@ -1,9 +1,9 @@
 from django.urls import path
-from django.views.generic import TemplateView
+from . import views
 
 app_name = 'tables'
 
 urlpatterns = [
-    # Временная заглушка для главной страницы
-    path('', TemplateView.as_view(template_name='tables/home.html'), name='home'),
+    path('', views.TableListView.as_view(), name='home'),
+    path('table/<int:pk>/', views.TableDetailView.as_view(), name='table_detail'),
 ]

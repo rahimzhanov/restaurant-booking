@@ -9,7 +9,6 @@ urlpatterns = [
     path('login/', views.CustomLoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(
         next_page='tables:home',
-        http_method_names=['post']  # Только POST
+        http_method_names=['post', 'get', 'options']
     ), name='logout'),
-    path('profile/', views.ProfileView.as_view(), name='profile'),
 ]

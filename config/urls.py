@@ -6,8 +6,9 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('users.urls')),
+    path('tables/', include('tables.urls')),
     path('bookings/', include('bookings.urls')),
-    path('', include('tables.urls')),  # Главная страница - список столиков
+    path('', include('tables.urls')),  # Главная — список столиков
 ]
 
 if settings.DEBUG:

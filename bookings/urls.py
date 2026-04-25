@@ -1,11 +1,13 @@
 from django.urls import path
-from django.views.generic import TemplateView
+from . import views
 
 app_name = 'bookings'
 
 urlpatterns = [
-    # Временные заглушки, заменим на реальные views на Этапе 3
-    path('', TemplateView.as_view(template_name='bookings/booking_list.html'), name='booking_list'),
-    path('profile/', TemplateView.as_view(template_name='users/profile.html'), name='profile'),
-    path('admin/', TemplateView.as_view(template_name='bookings/admin_booking_list.html'), name='admin_booking_list'),
+    path('', views.BookingListView.as_view(), name='booking_list'),
+    path('create/', views.BookingCreateView.as_view(), name='booking_create'),
+    path('<int:pk>/', views.BookingDetailView.as_view(), name='booking_detail'),
+    path('<int:pk>/cancel/', views.BookingCancelView.as_view(), name='booking_cancel'),
+    # Профиль теперь будет в bookings
+    path('profile/', views.BookingListView.as_view(), name='profile'),
 ]

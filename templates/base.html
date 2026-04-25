@@ -5,10 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Ресторан "Вкус"{% endblock %}</title>
 
-    <!-- Bootstrap 5 для красивого дизайна -->
+    <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Наши стили (создадим позже) -->
     {% load static %}
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
 </head>
@@ -16,10 +15,8 @@
     <!-- Навигационная панель -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <!-- Название ресторана — ссылка на главную -->
             <a class="navbar-brand" href="{% url 'tables:home' %}">🍽️ Ресторан "Вкус"</a>
 
-            <!-- Кнопка для мобильного меню -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -41,17 +38,15 @@
                 <!-- Правая часть меню -->
                 <ul class="navbar-nav">
                     {% if user.is_authenticated %}
-                        <!-- Если пользователь вошёл -->
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'users:profile' %}">
+                            <a class="nav-link" href="{% url 'bookings:profile' %}">
                                 👤 {{ user.first_name|default:user.email }}
                             </a>
                         </li>
 
                         {% if user.is_admin_staff %}
-                        <!-- Если админ — показываем ссылку на управление -->
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'bookings:admin_booking_list' %}">
+                            <a class="nav-link" href="{% url 'admin:index' %}">
                                 ⚙️ Управление
                             </a>
                         </li>
@@ -66,7 +61,6 @@
                             </form>
                         </li>
                     {% else %}
-                        <!-- Если не вошёл — ссылки на вход и регистрацию -->
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'users:login' %}">Войти</a>
                         </li>
@@ -79,7 +73,7 @@
         </div>
     </nav>
 
-    <!-- Блок для сообщений (успех, ошибка, предупреждение) -->
+    <!-- Сообщения -->
     {% if messages %}
     <div class="container mt-3">
         {% for message in messages %}
@@ -91,7 +85,7 @@
     </div>
     {% endif %}
 
-    <!-- Основной контент страницы — сюда вставляется содержимое других шаблонов -->
+    <!-- Основной контент -->
     <main class="container mt-4">
         {% block content %}
         {% endblock %}
@@ -104,7 +98,7 @@
         </div>
     </footer>
 
-    <!-- Bootstrap JS (для мобильного меню и алертов) -->
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}Новое бронирование | Ресторан "Вкус"{% endblock %}
+
+{% block content %}
+<h2>🕐 Новое бронирование</h2>
+
+<div class="row mt-4">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+
+                    {% if form.errors %}
+                    <div class="alert alert-danger">
+                        Пожалуйста, исправьте ошибки в форме.
+                    </div>
+                    {% endif %}
+
+                    <div class="mb-3">
+                        <label for="{{ form.table.id_for_label }}" class="form-label">Столик</label>
+                        {{ form.table }}
+                        {% if form.table.errors %}
+                        <div class="text-danger small">{{ form.table.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="{{ form.date.id_for_label }}" class="form-label">Дата</label>
+                            {{ form.date }}
+                            {% if form.date.errors %}
+                            <div class="text-danger small">{{ form.date.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label for="{{ form.time.id_for_label }}" class="form-label">Время</label>
+                            {{ form.time }}
+                            {% if form.time.errors %}
+                            <div class="text-danger small">{{ form.time.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label for="{{ form.duration.id_for_label }}" class="form-label">Длительность (часы)</label>
+                            {{ form.duration }}
+                            {% if form.duration.errors %}
+                            <div class="text-danger small">{{ form.duration.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.guests.id_for_label }}" class="form-label">Количество гостей</label>
+                        {{ form.guests }}
+                        {% if form.guests.errors %}
+                        <div class="text-danger small">{{ form.guests.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.comment.id_for_label }}" class="form-label">Комментарий</label>
+                        {{ form.comment }}
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Забронировать</button>
+                    <a href="{% url 'tables:home' %}" class="btn btn-secondary">Отмена</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
