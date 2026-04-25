@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block title %}Редактирование брони | Ресторан "Вкус"{% endblock %}
+
+{% block content %}
+<h2>✏️ Редактирование брони №{{ booking.id }}</h2>
+
+<div class="row mt-4">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <form method="post" novalidate>
+                    {% csrf_token %}
+
+                    {% if form.errors %}
+                    <div class="alert alert-danger">
+                        Пожалуйста, исправьте ошибки в форме.
+                        {{ form.errors }}
+                    </div>
+                    {% endif %}
+
+                    <div class="mb-3">
+                        <label class="form-label">Столик</label>
+                        <select name="table" class="form-select">
+                            {% for table in form.fields.table.queryset %}
+                            <option value="{{ table.pk }}"
+                                {% if table.pk == booking.table.pk %}selected{% endif %}>
+                                Столик №{{ table.number }} ({{ table.seats }} мест)
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Статус</label>
+                        <select name="status" class="form-select">
+                            <option value="pending" {% if booking.status == 'pending' %}selected{% endif %}>
+                                Ожидает подтверждения
+                            </option>
+                            <option value="confirmed" {% if booking.status == 'confirmed' %}selected{% endif %}>
+                                Подтверждено
+                            </option>
+                            <option value="cancelled" {% if booking.status == 'cancelled' %}selected{% endif %}>
+                                Отмена
+                            </option>
+                            <option value="completed" {% if booking.status == 'completed' %}selected{% endif %}>
+                                Завершено
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Дата</label>
+                            <input type="date" name="date" class="form-control"
+                                   value="{{ booking.date|date:'Y-m-d' }}" required>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Время</label>
+                            <input type="time" name="time" class="form-control"
+                                   value="{{ booking.time|time:'H:i' }}" required>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Длительность (часы)</label>
+                            <input type="number" name="duration" class="form-control"
+                                   value="{{ booking.duration }}" min="1" max="6" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Количество гостей</label>
+                        <input type="number" name="guests" class="form-control"
+                               value="{{ booking.guests }}" min="1" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Комментарий</label>
+                        <textarea name="comment" class="form-control" rows="3">{{ booking.comment }}</textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">💾 Сохранить</button>
+                    <a href="{% url 'bookings:admin_booking_list' %}" class="btn btn-secondary">← Назад к списку</a>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Информация о клиенте -->
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5>Информация о клиенте</h5>
+                <p><strong>Имя:</strong> {{ booking.user.first_name }}</p>
+                <p><strong>Email:</strong> {{ booking.user.email }}</p>
+                <p><strong>Телефон:</strong> {{ booking.user.phone|default:"Не указан" }}</p>
+                <p><strong>Текущий столик:</strong> №{{ booking.table.number }} ({{ booking.table.seats }} мест)</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

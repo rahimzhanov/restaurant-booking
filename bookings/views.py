@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.utils import timezone
 from .models import Booking
 from .forms import BookingForm
+from .mixins import AdminRequiredMixin
 
 
 class BookingListView(LoginRequiredMixin, ListView):
@@ -129,3 +130,69 @@ class BookingCancelView(LoginRequiredMixin, UpdateView):
 
         messages.success(self.request, 'Бронирование отменено.')
         return redirect(self.success_url)
+
+
+class AdminBookingListView(AdminRequiredMixin, ListView):
+    """
+    Администратор видит ВСЕ бронирования.
+
+    AdminRequiredMixin — наша проверка прав (только админ)
+    ListView — стандартный список объектов
+    """
+    model = Booking
+    template_name = 'bookings/admin_booking_list.html'
+    context_object_name = 'bookings'
+
+    def get_queryset(self):
+        """
+        Все бронирования с подгрузкой связанных данных.
+        select_related — оптимизация запросов (один SQL вместо трёх)
+        """
+        return Booking.objects.select_related('user', 'table').all()
+
+    def get_context_data(self, **kwargs):
+        """
+        Добавляем статистику для дашборда администратора.
+        """
+        context = super().get_context_data(**kwargs)
+
+        # Считаем количество броней по статусам
+        context['pending_count'] = Booking.objects.filter(status='pending').count()
+        context['confirmed_count'] = Booking.objects.filter(status='confirmed').count()
+        context['today_bookings'] = Booking.objects.filter(
+            date=timezone.now().date()
+        ).count()
+
+        return context
+
+
+class AdminBookingUpdateView(AdminRequiredMixin, UpdateView):
+    """
+    Изменение статуса бронирования администратором.
+
+    UpdateView автоматически:
+    1. Находит объект по pk из URL
+    2. Показывает форму с текущими данными
+    3. Сохраняет изменения
+    """
+    model = Booking
+    fields = ['status', 'table', 'date', 'time', 'duration', 'guests', 'comment']
+    template_name = 'bookings/admin_booking_form.html'
+    success_url = reverse_lazy('bookings:admin_booking_list')
+
+    def form_valid(self, form):
+        """
+        При изменении статуса показываем уведомление.
+        """
+        booking = self.get_object()
+        old_status = booking.get_status_display()
+
+        response = super().form_valid(form)
+
+        new_status = self.object.get_status_display()
+        messages.success(
+            self.request,
+            f'Бронь №{self.object.id}: статус изменён с "{old_status}" на "{new_status}"'
+        )
+
+        return response

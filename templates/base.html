@@ -36,6 +36,7 @@
                 </ul>
 
                 <!-- Правая часть меню -->
+                <!-- Правая часть меню -->
                 <ul class="navbar-nav">
                     {% if user.is_authenticated %}
                         <li class="nav-item">
@@ -45,10 +46,16 @@
                         </li>
 
                         {% if user.is_admin_staff %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'admin:index' %}">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
                                 ⚙️ Управление
                             </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{% url 'bookings:admin_booking_list' %}">📋 Все бронирования</a></li>
+                                <li><a class="dropdown-item" href="{% url 'tables:admin_table_list' %}">🪑 Управление столиками</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{% url 'admin:index' %}">🔧 Админка Django</a></li>
+                            </ul>
                         </li>
                         {% endif %}
 
