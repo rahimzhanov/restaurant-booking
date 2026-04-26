@@ -23,15 +23,29 @@
         <h3>Забронировать</h3>
         <div class="card">
             <div class="card-body">
-                <form method="post" action="{% url 'bookings:booking_create' %}">
+                {% if form.errors %}
+                <div class="alert alert-danger">
+                    <strong>Ошибка бронирования:</strong>
+                    <ul class="mb-0 mt-2">
+                        {% for field in form %}
+                            {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                        {% for error in form.non_field_errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+
+                <form method="post" action="{% url 'bookings:booking_create' %}" novalidate>
                     {% csrf_token %}
-                    <!-- Скрытое поле с выбранным столиком -->
                     <input type="hidden" name="table" value="{{ table.pk }}">
 
                     <div class="mb-3">
                         <label class="form-label">Дата</label>
-                        <input type="date" name="date" class="form-control" required
-                               min="{{ today|date:'Y-m-d' }}">
+                        <input type="date" name="date" class="form-control" required>
                     </div>
 
                     <div class="mb-3">
@@ -43,6 +57,7 @@
                         <label class="form-label">Длительность (часы)</label>
                         <input type="number" name="duration" class="form-control"
                                value="2" min="1" max="6" required>
+                        <div class="form-text">Вы будете занимать столик в течение этого времени</div>
                     </div>
 
                     <div class="mb-3">
@@ -55,7 +70,7 @@
                     <div class="mb-3">
                         <label class="form-label">Комментарий</label>
                         <textarea name="comment" class="form-control" rows="2"
-                                  placeholder="Особые пожелания"></textarea>
+                                  placeholder="Особые пожелания (необязательно)"></textarea>
                     </div>
 
                     <button type="submit" class="btn btn-primary w-100">

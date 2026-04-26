@@ -35,44 +35,37 @@ class BookingListView(LoginRequiredMixin, ListView):
 
 
 class BookingCreateView(LoginRequiredMixin, CreateView):
-    """
-    Создание нового бронирования.
-
-    CreateView:
-    - GET: показывает пустую форму
-    - POST: проверяет данные, создаёт объект, перенаправляет
-    """
-
     model = Booking
     form_class = BookingForm
-    template_name = "bookings/booking_form.html"
-    success_url = reverse_lazy("bookings:booking_list")
+    template_name = 'bookings/booking_form.html'
+    success_url = reverse_lazy('bookings:booking_list')
 
     def form_valid(self, form):
-        """
-        Вызывается, когда форма прошла валидацию.
-        Привязываем бронь к текущему пользователю.
-        """
-        # Не сохраняем сразу (commit=False), чтобы добавить пользователя
         form.instance.user = self.request.user
-
-        # Показываем сообщение об успехе
         messages.success(
-            self.request, "Столик успешно забронирован! Ожидайте подтверждения."
+            self.request,
+            f'Столик №{form.instance.table.number} успешно забронирован! '
+            f'Ожидайте подтверждения.'
         )
-
         return super().form_valid(form)
 
-    def get_context_data(self, **kwargs):
-        """
-        Передаём в шаблон дополнительные данные.
-        """
-        context = super().get_context_data(**kwargs)
-        # Передаём выбранный столик, если он передан в URL
-        table_id = self.request.GET.get("table")
+    def form_invalid(self, form):
+        """При ошибке возвращаем пользователя на страницу столика с формой"""
+        table_id = self.request.POST.get('table')
         if table_id:
-            context["selected_table"] = table_id
-        return context
+            from tables.models import Table
+            table = Table.objects.get(pk=table_id)
+            messages.error(
+                self.request,
+                'Не удалось забронировать столик. Проверьте ошибки в форме.'
+            )
+            # Отрисовываем страницу столика с ошибками
+            from django.shortcuts import render
+            return render(self.request, 'tables/table_detail.html', {
+                'table': table,
+                'form': form,
+            })
+        return super().form_invalid(form)
 
 
 class BookingDetailView(LoginRequiredMixin, DetailView):
