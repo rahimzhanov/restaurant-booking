@@ -1,0 +1,35 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.egg-info
+.eggs
+
+# Virtual environment
+.venv
+venv
+env
+
+# IDE
+.idea
+.vscode
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Django
+db.sqlite3
+staticfiles
+media
+
+# Documentation
+README.md
+
+# Development files
+requirements-dev.txt
