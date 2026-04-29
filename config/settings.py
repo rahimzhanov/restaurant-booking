@@ -22,6 +22,7 @@ INSTALLED_APPS = [
     "users.apps.UsersConfig",
     "tables.apps.TablesConfig",
     "bookings.apps.BookingsConfig",
+    'content.apps.ContentConfig',
 ]
 
 MIDDLEWARE = [
@@ -48,6 +49,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                'content.context_processors.site_content',
             ],
         },
     },
