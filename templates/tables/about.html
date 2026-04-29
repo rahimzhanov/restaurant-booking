@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}О ресторане | Ресторан "Вкус"{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+    <!-- История -->
+    {% if site_content.about_history %}
+    <div class="row mb-5">
+        <div class="col-lg-8 mx-auto text-center">
+            <h2 class="mb-4">{{ site_content.about_history.title }}</h2>
+            <p class="lead">{{ site_content.about_history.content|linebreaksbr }}</p>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Миссия -->
+    {% if site_content.about_mission %}
+    <div class="row mb-5">
+        <div class="col-lg-8 mx-auto">
+            <div class="bg-light p-5 rounded-3">
+                <h3 class="text-center mb-4">{{ site_content.about_mission.title }}</h3>
+                <p>{{ site_content.about_mission.content|linebreaksbr }}</p>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Команда -->
+    {% if site_content.about_team %}
+    <div class="row mb-5">
+        <div class="col-lg-8 mx-auto text-center">
+            <h3 class="mb-4">{{ site_content.about_team.title }}</h3>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="p-4 bg-light rounded-3">
+                        <div class="fs-1 mb-2">👨‍🍳</div>
+                        <h5>Александр Петров</h5>
+                        <p class="text-muted small">Шеф-повар, 15 лет опыта</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-4 bg-light rounded-3">
+                        <div class="fs-1 mb-2">👩‍🍳</div>
+                        <h5>Мария Иванова</h5>
+                        <p class="text-muted small">Су-шеф, мастер десертов</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-4 bg-light rounded-3">
+                        <div class="fs-1 mb-2">🤵</div>
+                        <h5>Дмитрий Смирнов</h5>
+                        <p class="text-muted small">Управляющий</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

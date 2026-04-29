@@ -1,6 +1,6 @@
 from django.core.checks import messages
 from django.urls import reverse_lazy
-from django.views.generic import (DetailView, ListView, UpdateView)
+from django.views.generic import (DetailView, ListView, UpdateView, TemplateView)
 from bookings.mixins import AdminRequiredMixin
 
 from .models import Table
@@ -69,3 +69,7 @@ class TableUpdateView(AdminRequiredMixin, UpdateView):
     def form_valid(self, form):
         messages.success(self.request, f"Столик №{self.object.number} обновлён.")
         return super().form_valid(form)
+
+
+class AboutView(TemplateView):
+    template_name = 'tables/about.html'

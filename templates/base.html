@@ -5,15 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Ресторан "Вкус"{% endblock %}</title>
 
-    <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
     {% load static %}
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
 </head>
 <body>
     <!-- Навигационная панель -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
         <div class="container">
             <a class="navbar-brand" href="{% url 'tables:home' %}">🍽️ Ресторан "Вкус"</a>
 
@@ -22,12 +22,13 @@
             </button>
 
             <div class="collapse navbar-collapse" id="navbarNav">
-                <!-- Левая часть меню -->
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'tables:home' %}">Столики</a>
+                        <a class="nav-link" href="{% url 'tables:home' %}">Главная</a>
                     </li>
-
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'tables:about' %}">О ресторане</a>
+                    </li>
                     {% if user.is_authenticated %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'bookings:booking_list' %}">Мои бронирования</a>
@@ -35,8 +36,6 @@
                     {% endif %}
                 </ul>
 
-                <!-- Правая часть меню -->
-                <!-- Правая часть меню -->
                 <ul class="navbar-nav">
                     {% if user.is_authenticated %}
                         <li class="nav-item">
@@ -50,7 +49,7 @@
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
                                 ⚙️ Управление
                             </a>
-                            <ul class="dropdown-menu">
+                            <ul class="dropdown-menu dropdown-menu-end">
                                 <li><a class="dropdown-item" href="{% url 'bookings:admin_booking_list' %}">📋 Все бронирования</a></li>
                                 <li><a class="dropdown-item" href="{% url 'tables:admin_table_list' %}">🪑 Управление столиками</a></li>
                                 <li><hr class="dropdown-divider"></li>
@@ -93,19 +92,71 @@
     {% endif %}
 
     <!-- Основной контент -->
-    <main class="container mt-4">
+    <main>
         {% block content %}
         {% endblock %}
     </main>
 
-    <!-- Подвал -->
-    <footer class="footer mt-5 py-3 bg-light">
-        <div class="container text-center">
-            <span class="text-muted">© {% now "Y" %} Ресторан "Вкус". Все права защищены.</span>
+    <!-- Футер -->
+    <footer class="bg-dark text-white pt-5 pb-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <!-- О ресторане -->
+                <div class="col-md-4 mb-4">
+                    <h5 class="text-warning">🍽️ Ресторан "Вкус"</h5>
+                    <p class="text-white-50 small">
+                        {% if site_content.footer %}
+                            {{ site_content.footer.title }} — место, где традиции встречаются с современностью.
+                        {% else %}
+                            Место, где традиции встречаются с современностью.
+                        {% endif %}
+                    </p>
+                </div>
+
+                <!-- Навигация -->
+                <div class="col-md-2 mb-4">
+                    <h6 class="text-warning">Навигация</h6>
+                    <ul class="list-unstyled small">
+                        <li><a href="{% url 'tables:home' %}" class="text-white-50 text-decoration-none">Главная</a></li>
+                        <li><a href="{% url 'tables:about' %}" class="text-white-50 text-decoration-none">О ресторане</a></li>
+                        <li><a href="{% url 'tables:home' %}#tables" class="text-white-50 text-decoration-none">Столики</a></li>
+                    </ul>
+                </div>
+
+                <!-- Контакты -->
+                <div class="col-md-3 mb-4">
+                    <h6 class="text-warning">Контакты</h6>
+                    <ul class="list-unstyled small text-white-50">
+                        <li class="mb-1">📍 ул. Примерная, д. 123</li>
+                        <li class="mb-1">📞 +7 (999) 123-45-67</li>
+                        <li class="mb-1">📧 info@vkus-restaurant.ru</li>
+                        <li>🕐 Пн-Вс, 12:00–00:00</li>
+                    </ul>
+                </div>
+
+                <!-- Соцсети -->
+                <div class="col-md-3 mb-4">
+                    <h6 class="text-warning">Мы в соцсетях</h6>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-white-50 fs-5"><i class="bi bi-telegram"></i></a>
+                        <a href="#" class="text-white-50 fs-5"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="text-white-50 fs-5"><i class="bi bi-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="border-secondary">
+
+            <div class="text-center text-white-50 small">
+                {% if site_content.footer %}
+                    {{ site_content.footer.content }}
+                {% else %}
+                    © 2026 Ресторан "Вкус". Все права защищены.
+                {% endif %}
+            </div>
         </div>
     </footer>
 
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

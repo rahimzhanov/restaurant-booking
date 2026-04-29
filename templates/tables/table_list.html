@@ -1,48 +1,96 @@
 {% extends 'base.html' %}
 
-{% block title %}Столики | Ресторан "Вкус"{% endblock %}
+{% block title %}Ресторан "Вкус" | Бронирование столиков{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-12">
-        <h2 class="mb-4">🍽️ Наши столики</h2>
-        <p class="lead">Выберите столик и забронируйте его онлайн</p>
+
+<!-- Хиро-блок -->
+<div class="bg-light py-5 mb-5" style="background: linear-gradient(135deg, #f5f0e8 0%, #e8dcc8 100%);">
+    <div class="container text-center">
+        <h1 class="display-4 mb-3">🍽️ Ресторан "Вкус"</h1>
+        {% if site_content.home_about %}
+        <p class="lead mb-4 col-lg-8 mx-auto">{{ site_content.home_about.content|truncatewords:30 }}</p>
+        {% endif %}
+        <a href="#tables" class="btn btn-dark btn-lg">Забронировать столик</a>
+        <a href="{% url 'tables:about' %}" class="btn btn-outline-dark btn-lg ms-2">Узнать больше</a>
     </div>
 </div>
 
-<div class="row">
-    {% for table in tables %}
-    <div class="col-md-4 mb-4">
-        <div class="card h-100 shadow-sm">
-            <div class="card-body">
-                <h5 class="card-title">Столик №{{ table.number }}</h5>
-                <p class="card-text">
-                    <strong>🪑 Мест:</strong> {{ table.seats }}<br>
-                    {% if table.location %}
-                    <strong>📍 Расположение:</strong> {{ table.location }}<br>
-                    {% endif %}
-                    {% if table.description %}
-                    <small class="text-muted">{{ table.description }}</small>
-                    {% endif %}
-                </p>
-            </div>
-            <div class="card-footer bg-white">
-                {% if user.is_authenticated %}
-                <a href="{% url 'tables:table_detail' table.pk %}" class="btn btn-primary w-100">
-                    Забронировать
-                </a>
-                {% else %}
-                <a href="{% url 'users:login' %}?next={% url 'tables:table_detail' table.pk %}" class="btn btn-outline-primary w-100">
-                    Войдите, чтобы забронировать
-                </a>
-                {% endif %}
+<div class="container">
+    <!-- Услуги -->
+    {% if site_content.home_services %}
+    <div class="row mb-5">
+        <div class="col-12 text-center mb-4">
+            <h2>{{ site_content.home_services.title }}</h2>
+        </div>
+        <div class="col-lg-8 mx-auto">
+            <div class="row g-4">
+                <div class="col-md-4 text-center">
+                    <div class="p-4 bg-light rounded-3 h-100">
+                        <div class="fs-1 mb-2">🎉</div>
+                        <h5>Банкеты</h5>
+                        <p class="text-muted small">До 50 гостей</p>
+                    </div>
+                </div>
+                <div class="col-md-4 text-center">
+                    <div class="p-4 bg-light rounded-3 h-100">
+                        <div class="fs-1 mb-2">💼</div>
+                        <h5>Бизнес-ланчи</h5>
+                        <p class="text-muted small">Пн-Пт, 12:00–16:00</p>
+                    </div>
+                </div>
+                <div class="col-md-4 text-center">
+                    <div class="p-4 bg-light rounded-3 h-100">
+                        <div class="fs-1 mb-2">🎵</div>
+                        <h5>Живая музыка</h5>
+                        <p class="text-muted small">Пт-Сб, с 19:00</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    {% empty %}
-    <div class="col-12">
-        <div class="alert alert-info">Нет доступных столиков.</div>
+    {% endif %}
+
+    <!-- Столики -->
+    <div id="tables" class="row mb-4">
+        <div class="col-12 text-center">
+            <h2>🍽️ Наши столики</h2>
+            <p class="lead text-muted">Выберите столик и забронируйте его онлайн</p>
+        </div>
     </div>
-    {% endfor %}
+
+    <div class="row mb-5">
+        {% for table in tables %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="fs-1 mb-2">🪑</div>
+                    <h5 class="card-title">Столик №{{ table.number }}</h5>
+                    <p class="card-text">
+                        <strong>{{ table.seats }}</strong> мест<br>
+                        {% if table.location %}
+                        <small class="text-muted">📍 {{ table.location }}</small>
+                        {% endif %}
+                    </p>
+                </div>
+                <div class="card-footer bg-white text-center">
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'tables:table_detail' table.pk %}" class="btn btn-dark w-100">
+                        Забронировать
+                    </a>
+                    {% else %}
+                    <a href="{% url 'users:login' %}?next={% url 'tables:table_detail' table.pk %}" class="btn btn-outline-dark w-100">
+                        Войти для брони
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info text-center">Нет доступных столиков.</div>
+        </div>
+        {% endfor %}
+    </div>
 </div>
 {% endblock %}
