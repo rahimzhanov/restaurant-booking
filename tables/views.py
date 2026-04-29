@@ -1,9 +1,12 @@
 from django.core.checks import messages
-from django.urls import reverse_lazy
-from django.views.generic import (DetailView, ListView, UpdateView, TemplateView)
 from bookings.mixins import AdminRequiredMixin
 
 from .models import Table
+
+from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView, TemplateView, CreateView, UpdateView
+from django.contrib import messages
+from content.forms import ContactForm
 
 
 class TableListView(ListView):
@@ -73,3 +76,20 @@ class TableUpdateView(AdminRequiredMixin, UpdateView):
 
 class AboutView(TemplateView):
     template_name = 'tables/about.html'
+
+
+class ContactView(CreateView):
+    """
+    Форма обратной связи.
+    Сохраняет сообщение в БД, показывает уведомление.
+    """
+    form_class = ContactForm
+    template_name = 'tables/contact.html'
+    success_url = reverse_lazy('tables:home')
+
+    def form_valid(self, form):
+        messages.success(
+            self.request,
+            'Спасибо за обращение! Мы свяжемся с вами в ближайшее время.'
+        )
+        return super().form_valid(form)

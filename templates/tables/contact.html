@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}Обратная связь | Ресторан "Вкус"{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-6 mx-auto">
+            <h2 class="text-center mb-4">📩 Обратная связь</h2>
+            <p class="text-center text-muted mb-4">Остались вопросы? Напишите нам, и мы ответим в ближайшее время.</p>
+
+            <div class="card shadow">
+                <div class="card-body p-4">
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label class="form-label">Имя</label>
+                            {{ form.name }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            {{ form.email }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Сообщение</label>
+                            {{ form.message }}
+                        </div>
+
+                        <button type="submit" class="btn btn-dark w-100">Отправить</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

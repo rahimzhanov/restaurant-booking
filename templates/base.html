@@ -11,73 +11,84 @@
     {% load static %}
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
 </head>
-<body>
-    <!-- Навигационная панель -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
-        <div class="container">
-            <a class="navbar-brand" href="{% url 'tables:home' %}">🍽️ Ресторан "Вкус"</a>
+<body class="d-flex flex-column min-vh-100">
+    <!-- Header -->
+    <header>
+        <!-- Верхняя панель -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+            <div class="container">
+                <a class="navbar-brand" href="{% url 'tables:home' %}">🍽️ Ресторан "Вкус"</a>
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'tables:home' %}">Главная</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'tables:about' %}">О ресторане</a>
-                    </li>
-                    {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'bookings:booking_list' %}">Мои бронирования</a>
-                    </li>
-                    {% endif %}
-                </ul>
-
-                <ul class="navbar-nav">
-                    {% if user.is_authenticated %}
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <!-- Основная навигация -->
+                    <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'bookings:profile' %}">
-                                👤 {{ user.first_name|default:user.email }}
-                            </a>
+                            <a class="nav-link" href="{% url 'tables:home' %}">Главная</a>
                         </li>
-
-                        {% if user.is_admin_staff %}
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                ⚙️ Управление
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="{% url 'bookings:admin_booking_list' %}">📋 Все бронирования</a></li>
-                                <li><a class="dropdown-item" href="{% url 'tables:admin_table_list' %}">🪑 Управление столиками</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="{% url 'admin:index' %}">🔧 Админка Django</a></li>
-                            </ul>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'tables:about' %}">О ресторане</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'tables:home' %}#tables">Столики</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'tables:contact' %}">Обратная связь</a>
+                        </li>
+                        {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'bookings:booking_list' %}">Мои бронирования</a>
                         </li>
                         {% endif %}
+                    </ul>
 
-                        <li class="nav-item">
-                            <form method="post" action="{% url 'users:logout' %}" style="display: inline;">
-                                {% csrf_token %}
-                                <button type="submit" class="nav-link btn btn-link" style="text-decoration: none;">
-                                    Выйти
-                                </button>
-                            </form>
-                        </li>
-                    {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'users:login' %}">Войти</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'users:register' %}">Регистрация</a>
-                        </li>
-                    {% endif %}
-                </ul>
+                    <!-- Пользовательское меню -->
+                    <ul class="navbar-nav">
+                        {% if user.is_authenticated %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'bookings:profile' %}">
+                                    👤 {{ user.first_name|default:user.email }}
+                                </a>
+                            </li>
+
+                            {% if user.is_admin_staff %}
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                    ⚙️ Управление
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" href="{% url 'bookings:admin_booking_list' %}">📋 Все бронирования</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'tables:admin_table_list' %}">🪑 Управление столиками</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="{% url 'admin:index' %}">🔧 Админка Django</a></li>
+                                </ul>
+                            </li>
+                            {% endif %}
+
+                            <li class="nav-item">
+                                <form method="post" action="{% url 'users:logout' %}" style="display: inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="nav-link btn btn-link" style="text-decoration: none;">
+                                        Выйти
+                                    </button>
+                                </form>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'users:login' %}">Войти</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'users:register' %}">Регистрация</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
             </div>
-        </div>
-    </nav>
+        </nav>
+    </header>
 
     <!-- Сообщения -->
     {% if messages %}
@@ -92,40 +103,26 @@
     {% endif %}
 
     <!-- Основной контент -->
-    <main>
+    <main class="flex-shrink-0">
         {% block content %}
         {% endblock %}
     </main>
 
     <!-- Футер -->
-    <footer class="bg-dark text-white pt-5 pb-4 mt-5">
+    <footer class="bg-dark text-white pt-5 pb-4 mt-auto">
         <div class="container">
             <div class="row">
                 <!-- О ресторане -->
                 <div class="col-md-4 mb-4">
                     <h5 class="text-warning">🍽️ Ресторан "Вкус"</h5>
                     <p class="text-white-50 small">
-                        {% if site_content.footer %}
-                            {{ site_content.footer.title }} — место, где традиции встречаются с современностью.
-                        {% else %}
-                            Место, где традиции встречаются с современностью.
-                        {% endif %}
+                        Место, где традиции встречаются с современностью. Уютный интерьер, живая музыка и безупречный сервис.
                     </p>
                 </div>
 
-                <!-- Навигация -->
-                <div class="col-md-2 mb-4">
-                    <h6 class="text-warning">Навигация</h6>
-                    <ul class="list-unstyled small">
-                        <li><a href="{% url 'tables:home' %}" class="text-white-50 text-decoration-none">Главная</a></li>
-                        <li><a href="{% url 'tables:about' %}" class="text-white-50 text-decoration-none">О ресторане</a></li>
-                        <li><a href="{% url 'tables:home' %}#tables" class="text-white-50 text-decoration-none">Столики</a></li>
-                    </ul>
-                </div>
-
                 <!-- Контакты -->
-                <div class="col-md-3 mb-4">
-                    <h6 class="text-warning">Контакты</h6>
+                <div class="col-md-4 mb-4">
+                    <h5 class="text-warning">Контакты</h5>
                     <ul class="list-unstyled small text-white-50">
                         <li class="mb-1">📍 ул. Примерная, д. 123</li>
                         <li class="mb-1">📞 +7 (999) 123-45-67</li>
@@ -135,13 +132,16 @@
                 </div>
 
                 <!-- Соцсети -->
-                <div class="col-md-3 mb-4">
-                    <h6 class="text-warning">Мы в соцсетях</h6>
-                    <div class="d-flex gap-3">
+                <div class="col-md-4 mb-4">
+                    <h5 class="text-warning">Мы в соцсетях</h5>
+                    <div class="d-flex gap-3 mb-3">
                         <a href="#" class="text-white-50 fs-5"><i class="bi bi-telegram"></i></a>
                         <a href="#" class="text-white-50 fs-5"><i class="bi bi-instagram"></i></a>
                         <a href="#" class="text-white-50 fs-5"><i class="bi bi-whatsapp"></i></a>
                     </div>
+                    <p class="text-white-50 small">
+                        <a href="{% url 'tables:contact' %}" class="text-warning text-decoration-none">📩 Написать нам</a>
+                    </p>
                 </div>
             </div>
 
